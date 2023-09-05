@@ -30,7 +30,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     return pageNumbers;
   };
 
-  return (
+  return totalPages > 1 ? (
     <div className="row">
       <div className="container">
         <div className="row">
@@ -57,8 +57,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div> 
+   
+  ) : null
 };
 
 export default Pagination;

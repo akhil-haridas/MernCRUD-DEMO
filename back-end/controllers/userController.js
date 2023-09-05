@@ -3,33 +3,46 @@ const Country = require("../models/countryShema");
 const State = require("../models/stateSchema");
 const City = require("../models/citySchema");
 const Language = require("../models/languageSchema");
+const bcrypt = require("bcrypt");
+const { validationResult } = require("express-validator");
 
-// User registration
+// Your createUser function
 exports.createUser = async (req, res) => {
   try {
-    const { fullname, email, password, confirmPassword, country, state, city } =
-      req.body;
-    console.log(req.body);
-    const existingUser = await User.findOne({ email });
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { FullName, Email, Password, Country, State, City,IsActive, Languages } = req.body;
+
+    const existingUser = await User.findOne({ Email });
 
     if (existingUser) {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: 'User already exists' });
     }
+
+    const saltRounds = 10; 
+    const hashedPassword = await bcrypt.hash(Password, saltRounds);
+
     const newUser = new User({
-      FullName: fullname,
-      Email: email,
-      Password: password,
-      Country: country,
-      State: state,
-      City: city,
+      FullName,
+      Email,
+      Password: hashedPassword,
+      Country,
+      State,
+      City,
+      Languages,
+      IsActive,
     });
 
     await newUser.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ message: 'User created successfully' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -92,6 +105,15 @@ exports.getUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const { userID, ...updatedUserData } = req.body;
+    if (updatedUserData.Password) {
+
+      const saltRounds = 10; 
+      const hashedPassword = await bcrypt.hash(
+        updatedUserData.Password,
+        saltRounds
+      );
+      updatedUserData.Password = hashedPassword;
+    }
 
     const updatedUser = await User.findByIdAndUpdate(userID, updatedUserData, {
       new: true,
@@ -101,7 +123,9 @@ exports.updateUser = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    return res.json(updatedUser);
+    const { Password, ...responseUserData } = updatedUser.toObject();
+
+    return res.json(responseUserData);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Server error" });
@@ -116,12 +140,16 @@ exports.getAllUsers = async (req, res) => {
       page: parseInt(page),
       limit: parseInt(limit),
       customLabels: { docs: "users", totalDocs: "totalImages" },
+      populate: [
+        { path: "Country", select: "Name" }, 
+        { path: "State", select: "Name" },
+        { path: "City", select: "Name" }, 
+        { path: "Languages", select: "Name" },
+      ],
     };
 
-    // Use the paginate method to get paginated users
     const result = await User.paginate({}, options);
 
-    // Format the users as needed
     const formattedUsers = result.users.map((user) => ({
       _id: user._id,
       FullName: user.FullName,
@@ -130,13 +158,12 @@ exports.getAllUsers = async (req, res) => {
       Country: user.Country ? user.Country.Name : "N/A",
       State: user.State ? user.State.Name : "N/A",
       City: user.City ? user.City.Name : "N/A",
-      Languages: user.Languages,
+      Languages: user.Languages.map((language) => language.Name), 
       IsActive: user.IsActive,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }));
 
-    // Include pagination data in the response
     const response = {
       users: formattedUsers,
       totalUsers: result.totalImages,
@@ -150,6 +177,7 @@ exports.getAllUsers = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
 
 
 exports.removeUser = async (req, res) => {
@@ -168,31 +196,31 @@ exports.removeUser = async (req, res) => {
 exports.create = async (req, res) => {
   try {
     // const newUser = new Language({
-    //   Name: "Hindi",
+    //   Name: "Kannada",
     // });
 
     // await newUser.save();
 
-    //  const newUser = new City({
-    //    Name: "Idukki",
-    //    State: "64f72b46b2ab7f4f8ab67c53",
-    //  });
+     const newUser = new City({
+       Name: "Red Deer",
+       State: "64f77cc7c93eb16300c38d7c",
+     });
 
-    //  await newUser.save();
+     await newUser.save();
 
     //  const newUser = new State({
-    //    Name: "Goa",
-    //    Country: "64f72a79673f76f1d8610bbe",
+    //    Name: "Northern Ireland",
+    //    Country: "64f77bb0126e1c42e1d37175",
     //  });
 
     //  await newUser.save();
 
     //  const newUser = new Country({
-    //    Name: "Oman",
+    //    Name: "United Kingdom(UK)",
     //  });
 
     //  await newUser.save();
 
-    res.status(200).json({ message: "pending successful" });
+    res.status(200).json(newUser);
   } catch (error) {}
 };

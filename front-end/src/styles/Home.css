@@ -192,13 +192,78 @@ p:last-child {
     background: #00000057;
     overflow-x: hidden;
 }
-.close-modal{
-    float: right;
-        margin-top: 45px;
-        margin-right: 75px;
-        position: relative;
-        cursor: pointer;
+
+.loader2 {
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background: #00000057;
+    overflow-x: hidden;
 }
+
+/* Style the label to appear as a toggle switch */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Hide the default checkbox */
+.checkbox-input {
+    display: none;
+}
+
+/* Style the custom checkbox container */
+.checkbox-custom {
+    width: 40px;
+    /* Adjust the size as needed */
+    height: 20px;
+    /* Adjust the size as needed */
+    background-color: #ccc;
+    border-radius: 20px;
+    position: relative;
+    transition: background-color 0.3s ease;
+}
+
+/* Style the custom checkbox itself */
+.checkbox-custom::before {
+    content: "";
+    width: 18px;
+    /* Adjust the size as needed */
+    height: 18px;
+    /* Adjust the size as needed */
+    background-color: #0e83d6;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 2px;
+    transition: left 0.3s ease;
+}
+
+/* Style the custom checkbox when checked */
+.checkbox-input:checked+.checkbox-custom::before {
+    left: calc(100% - 20px);
+}
+
+/* Style the custom checkbox when the label is clicked */
+.checkbox-label:hover .checkbox-custom {
+    background-color: #b5b5b5;
+}
+.close-modal {
+    float: right;
+    margin-top: 45px;
+    margin-right: 75px;
+    position: relative;
+    cursor: pointer;
+}
+
 .loader-inner {
     position: absolute;
     left: 47%;
@@ -436,12 +501,22 @@ p:last-child {
     background-color: #162133;
 }
 
-a.boxed-btn {
+a.boxed-btn,
+button.boxed-btn {
     font-family: 'Poppins', sans-serif;
     display: inline-block;
     background-color: #F28123;
     color: #fff;
     padding: 10px 20px;
+    border-radius: 50px;
+    -webkit-transition: 0.3s;
+    -o-transition: 0.3s;
+    transition: 0.3s;
+}
+
+button.boxed-btn:hover {
+    background-color: #051922;
+    color: #F28123;
 }
 
 a.bordered-btn {
@@ -1680,20 +1755,71 @@ p.excerpt {
 .single-latest-news {
     margin-bottom: 30px;
 }
-select{
+
+select {
     width: 100%;
     height: 50px;
 }
 
-option{
+/* CSS for password strength status bar */
+.password-strength-bar {
+    height: 10px;
+    margin-top: 5px;
+    background-color: #eee;
+    border-radius: 4px;
+    position: relative;
+}
+
+.strength {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease-in-out;
+}
+
+.strength-0 {
+    background-color: red;
+}
+
+.strength-1 {
+    background-color: orange;
+}
+
+.strength-2 {
+    background-color: yellow;
+}
+
+.strength-3 {
+    background-color: lightgreen;
+}
+
+.strength-4 {
+    background-color: green;
+}
+
+/* CSS for password strength text */
+.password-strength-text {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #333;
+}
+
+
+
+option {
     padding-right: 1px;
 }
+
 .latest-news {
     margin-top: -50px;
 }
 
 .pagination-wrap {
     margin-top: 40px;
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
 }
 
 .pagination-wrap ul {

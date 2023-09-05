@@ -7,6 +7,8 @@ import Pagination from "../components/Listing/Pagination";
 import Create from "../components/Create/Create";
 import AddButton from "../components/Listing/AddButton";
 import Edit from "../components/Edit/Edit";
+import Spinner from "../components/Fallback/Spinner";
+
 import { getUser, getAllusers, removeUser } from "../utils/api";
 
 const ITEMS_PER_PAGE = 2;
@@ -18,24 +20,27 @@ const ListingPage = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     fetchUsers(currentPage);
-  }, [isCreateVisible, currentPage]);
+  }, [isCreateVisible, currentPage, isEditVisible]);
 
   const fetchUsers = async (page) => {
+    setIsLoading(true);
     try {
       const response = await getAllusers(page, ITEMS_PER_PAGE);
       setUsers(response.users);
       setTotalPages(response.totalPages);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const onRemoveClick = async (userId) => {
     await removeUser(userId);
-    fetchUsers(currentPage); // Fetch users for the current page after removal
+    fetchUsers(currentPage);
   };
 
   const handlePageChange = (page) => {
@@ -67,6 +72,7 @@ const ListingPage = () => {
 
   return (
     <>
+      {isLoading && <Spinner />}
       {isCreateVisible && <Create onAddClick={toggleCreateComponent} />}
       {isEditVisible && (
         <Edit onEditClick={toggleEditComponent} userData={userData} />

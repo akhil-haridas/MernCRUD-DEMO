@@ -1,71 +1,138 @@
-import React,{useState,useEffect} from "react";
-import { Link } from "react-router-dom";
-import { createUser, getCities, getCountries, getLanguages, getStates } from "../../utils/api";
-import Spinner from "../../components/Fallback/Spinner"
-const Create = ({ onAddClick }) => {
+import React, { useState, useEffect } from "react";
+import zxcvbn from "zxcvbn";
 
+import {
+  createUser,
+  getCountries,
+  getStates,
+  getCities,
+  getLanguages,
+} from "../../utils/api";
+import Spinner from "../../components/Fallback/Spinner";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+
+const animatedComponents = makeAnimated();
+
+const Create = ({ onAddClick }) => {
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [languages, setLanguages] = useState([]);
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedState, setSelectedState] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedState, setSelectedState] = useState(null);
+  const [selectedCity, setSelectedCity] = useState(null);
   const [selectedLanguages, setSelectedLanguages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0 });
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   useEffect(() => {
-   fetchCountries()
+    fetchCountries();
+    fetchLanguages();
   }, []);
 
-  const fetchCountries = async() => {
+  const fetchCountries = async () => {
     const response = await getCountries();
-    const response2 = await getLanguages()
-    setCountries(response)
-    setLanguages(response2)
-  }
+    setCountries(response);
+  };
+  const validateEmail = (email) => {
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    return emailRegex.test(email);
+  };
+  const handleEmailChange = (event) => {
+    const newEmail = event.target.value;
+    setEmail(newEmail);
 
-  const handleCountryChange = async (event) => {
-    const countryId = event.target.value;
-    setSelectedCountry(countryId); 
-    if (countryId) {
-      const response = await getStates(countryId);
+    if (!newEmail) {
+      setEmailError("");
+    } else if (!validateEmail(newEmail)) {
+      setEmailError("Please enter a valid email address.");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const fetchLanguages = async () => {
+    const response = await getLanguages();
+    setLanguages(response);
+  };
+
+  const handleCountryChange = async (selectedOption) => {
+    setSelectedCountry(selectedOption);
+    setSelectedState(null);
+    setSelectedCity(null);
+
+    if (selectedOption) {
+      const response = await getStates(selectedOption.value);
       setStates(response);
     } else {
       setStates([]);
     }
   };
 
-    const handleStateChange = async (event) => {
-      const stateId = event.target.value;
-      setSelectedState(stateId);
-      if (stateId) {
-        const response = await getCities(stateId);
-        console.log(response)
-        setCities(response);
+  const handleStateChange = async (selectedOption) => {
+    setSelectedState(selectedOption);
+    setSelectedCity(null);
 
-      } else {
-        setCities([]);
-      }
-    };
+    if (selectedOption) {
+      const response = await getCities(selectedOption.value);
+      setCities(response);
+    } else {
+      setCities([]);
+    }
+  };
 
-  
+  const handleCityChange = (selectedOption) => {
+    setSelectedCity(selectedOption);
+  };
+
+  const handlePasswordChange = (event) => {
+    const password = event.target.value;
+    const passwordStrength = zxcvbn(password);
+    setPasswordStrength(passwordStrength);
+    const score = passwordStrength.score;
+    setPassword(password);
+  };
+
+  const getPasswordStrengthLabel = (score) => {
+    switch (score) {
+      case 0:
+        return "Very Weak";
+      case 1:
+        return "Weak";
+      case 2:
+        return "Fair";
+      case 3:
+        return "Strong";
+      case 4:
+        return "Very Strong";
+      default:
+        return "Very Weak";
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     const formData = {
-      fullname: event.target.fullname.value,
-      email: event.target.email.value,
-      password: event.target.password.value,
-      confirmPassword: event.target.confirmpassword.value,
-      country: selectedCountry,
-      state: selectedState,
-      city: selectedCity,
+      FullName: event.target.fullname.value,
+      Email: event.target.email.value,
+      Password: event.target.password.value,
+      Country: selectedCountry ? selectedCountry.value : null,
+      State: selectedState ? selectedState.value : null,
+      City: selectedCity ? selectedCity.value : null,
+      Languages: selectedLanguages.map((language) => language.value),
+      IsActive: event.target.active.checked,
     };
 
     try {
       await createUser(formData);
-      onAddClick()
+      onAddClick();
       event.target.reset();
     } catch (error) {
       console.error("Error creating user:", error);
@@ -74,18 +141,33 @@ const Create = ({ onAddClick }) => {
     }
   };
 
+  const handleLanguageChange = (selectedOptions) => {
+    setSelectedLanguages(selectedOptions);
+  };
+
+  const handleConfirmPasswordChange = (event) => {
+    const confirmPassword = event.target.value;
+    if (confirmPassword === password) {
+      setConfirmPassword(confirmPassword);
+      setConfirmPasswordError("");
+    } else {
+      setConfirmPassword("");
+      setConfirmPasswordError("Passwords do not matching.");
+    }
+  };
+
   return (
     <>
       {isLoading && <Spinner />}
 
       <div
-        className="loader"
+        className="loader2"
         style={{
           paddingBottom: "70px",
           background: "#1c1a1a7a",
         }}
       >
-        <div className="close-modal" onClick={onAddClick}>
+        <div className="close-modal">
           <box-icon
             name="x-circle"
             color="#ffffff"
@@ -143,111 +225,141 @@ const Create = ({ onAddClick }) => {
                                 type="email"
                                 placeholder="Email"
                                 name="email"
+                                onChange={handleEmailChange}
                               />
+                              {emailError && (
+                                <span className="error-message">
+                                  {emailError}
+                                </span>
+                              )}
                             </p>
                             <p>
                               <label>Password</label>
                               <input
                                 type="password"
-                                placeholder="password"
+                                placeholder="Password"
                                 name="password"
+                                onChange={handlePasswordChange}
                               />
                             </p>
+                           
+                            <div className="password-strength-bar">
+                              <div
+                                className={`strength strength-${passwordStrength.score}`}
+                                style={{
+                                  width: `${
+                                    (passwordStrength.score + 1) * 20
+                                  }%`,
+                                }}
+                              ></div>
+                            </div>
+                            <p className="password-strength-text">
+                              Password Strength:{" "}
+                              {getPasswordStrengthLabel(passwordStrength.score)}
+                            </p>
+
                             <p>
                               <label>Confirm Password</label>
                               <input
                                 type="password"
-                                placeholder="Retype password"
+                                placeholder="Confirm Password"
                                 name="confirmpassword"
+                                onChange={handleConfirmPasswordChange}
+                                disabled={!password}
+                              />
+                              {confirmPasswordError && (
+                                <span className="error-message">
+                                  {confirmPasswordError}
+                                </span>
+                              )}
+                            </p>
+
+                            <p>
+                              <label>Country</label>
+                              <Select
+                                value={selectedCountry}
+                                onChange={handleCountryChange}
+                                options={countries.map((country) => ({
+                                  value: country._id,
+                                  label: country.Name,
+                                }))}
+                                components={animatedComponents}
                               />
                             </p>
                             <p>
-                              <label>Country</label>
-                              <select
-                                onChange={handleCountryChange}
-                                value={selectedCountry}
-                              >
-                                <option>Countries</option>
-                                {countries.map((country) => (
-                                  <option key={country._id} value={country._id}>
-                                    {country.Name}
-                                  </option>
-                                ))}
-                              </select>
-                            </p>
-                            <p>
                               <label>State</label>
-                              <select
-                                disabled={
-                                  !selectedCountry || states.length === 0
-                                }
-                                onChange={handleStateChange}
+                              <Select
+                                isDisabled={!selectedCountry}
                                 value={selectedState}
-                              >
-                                <option value="">Select a State</option>
-                                {states.map((state) => (
-                                  <option key={state._id} value={state._id}>
-                                    {state.Name}
-                                  </option>
-                                ))}
-                              </select>
+                                onChange={handleStateChange}
+                                options={states.map((state) => ({
+                                  value: state._id,
+                                  label: state.Name,
+                                }))}
+                                components={animatedComponents}
+                              />
                             </p>
                             <p>
                               <label>City</label>
-                              <select
-                                disabled={!selectedState || cities.length === 0}
-                                onChange={(e) =>
-                                  setSelectedCity(e.target.value)
-                                }
-                              >
-                                <option value="">Select a City</option>
-                                {cities.map((city) => (
-                                  <option key={city._id} value={city._id}>
-                                    {city.Name}
-                                  </option>
-                                ))}
-                              </select>
+                              <Select
+                                isDisabled={!selectedState}
+                                value={selectedCity}
+                                onChange={handleCityChange}
+                                options={cities.map((city) => ({
+                                  value: city._id,
+                                  label: city.Name,
+                                }))}
+                                components={animatedComponents}
+                              />
                             </p>
                             <p>
                               <label>Languages</label>
-                              <select>
-                                <option value="">Select a Language</option>
-                                {languages.map((language) => (
-                                  <option
-                                    key={language._id}
-                                    value={language._id}
-                                  >
-                                    {language.Name}
-                                  </option>
-                                ))}
-                              </select>
+                              <Select
+                                isMulti
+                                options={languages.map((language) => ({
+                                  value: language._id,
+                                  label: language.Name,
+                                }))}
+                                components={animatedComponents}
+                                onChange={handleLanguageChange}
+                                value={selectedLanguages}
+                              />
                             </p>
-                            <button
-                              className="boxed-btn"
-                              style={{
-                                marginRight: "1rem",
-                                background: "green",
-                              }}
-                              type="submit"
-                            >
-                              Create
-                            </button>
+                            <p>
+                              <label className="checkbox-label">
+                                Active
+                                <input
+                                  type="checkbox"
+                                  name="active"
+                                  className="checkbox-input"
+                                />
+                                <span className="checkbox-custom"></span>
+                              </label>
+                            </p>
+
+                            <div className="sub-new">
+                              <button
+                                className="boxed-btn"
+                                style={{
+                                  marginRight: "1rem",
+                                  background: "red",
+                                }}
+                                onClick={onAddClick}
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                className="boxed-btn"
+                                style={{
+                                  marginRight: "1rem",
+                                  background: "green",
+                                }}
+                                type="submit"
+                              >
+                                Create
+                              </button>
+                            </div>
                           </form>
-                        </div>
-                        <div className="sub-new">
-                          <Link
-                            className="boxed-btn"
-                            style={{ marginRight: "1rem", background: "red" }}
-                          >
-                            Cancel
-                          </Link>
-                          <Link
-                            className="boxed-btn"
-                            style={{ marginRight: "1rem", background: "green" }}
-                            type="submit"
-                          >
-                            Create
-                          </Link>
                         </div>
                       </div>
                     </div>

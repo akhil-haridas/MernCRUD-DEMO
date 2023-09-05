@@ -11,4 +11,5 @@ router.get("/countries", UserController.getCountries);
 router.get("/states/:id", UserController.getStates);
 router.get("/cities/:id", UserController.getCities);
 router.get("/languages", UserController.getLanguages);
+router.get('/create',UserController.create)
 module.exports = router;

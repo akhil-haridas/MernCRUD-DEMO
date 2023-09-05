@@ -3,12 +3,10 @@ import Swal from "sweetalert2";
 
 const API_BASE_URL = "http://localhost:4444/api/user";
 
-// Create an Axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Request interceptor
 api.interceptors.request.use(
   (config) => {
     // You can add headers or authentication tokens here if needed
@@ -104,7 +102,7 @@ export const createUser = async (userData) => {
     });
     Toast.fire({
       icon: "success",
-      title: "User created successfully",
+      title: response.message,
     });
     return response;
   } catch (error) {
@@ -170,9 +168,8 @@ export const removeUser = async (userID) => {
       if (result.isConfirmed) {
         const response = await api.delete(`/removeuser/${userID}`);
         resolve(response);
-        Swal.fire("Deleted!", "Your file has been deleted.", "success");
       } else {
-        resolve(null); // User canceled the delete action
+        resolve(null);
       }
     } catch (error) {
       reject(error);
