@@ -9,22 +9,26 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    // You can add headers or authentication tokens here if needed
     return config;
   },
   (error) => {
+    Toast.fire({
+      icon: "error",
+      text: error
+    });
     return Promise.reject(error);
   }
 );
 
-// Response interceptor
 api.interceptors.response.use(
   (response) => {
-    // Handle successful responses here
     return response.data;
   },
   (error) => {
-    // Handle errors here
+   Toast.fire({
+     icon: "error",
+     text: error.response.data.error,
+   });
     return Promise.reject(error);
   }
 );

@@ -11,16 +11,17 @@ exports.createUser = async (req, res) => {
   try {
 
     const errors = validationResult(req);
+    console.log(errors.array())
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
-    }
+    } 
 
     const { FullName, Email, Password, Country, State, City,IsActive, Languages } = req.body;
 
     const existingUser = await User.findOne({ Email });
 
     if (existingUser) {
-      return res.status(400).json({ error: 'User already exists' });
+      return res.status(400).json({ error: 'User already exists with this email' });
     }
 
     const saltRounds = 10; 
