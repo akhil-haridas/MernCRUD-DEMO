@@ -155,14 +155,32 @@ export const getUser = async (userID) => {
 
 
 export const removeUser = async (userID) => {
-      try {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (result.isConfirmed) {
         const response = await api.delete(`/removeuser/${userID}`);
-        return response;
-      } catch (error) {
-        Toast.fire({
-          icon: "error",
-          text: "Error fetching image",
-        });
-        throw error;
+        resolve(response);
+        Swal.fire("Deleted!", "Your file has been deleted.", "success");
+      } else {
+        resolve(null); // User canceled the delete action
       }
-}
+    } catch (error) {
+      reject(error);
+      Toast.fire({
+        icon: "error",
+        text: "Error deleting user",
+      });
+    }
+  });
+};
+

@@ -9,7 +9,7 @@ import AddButton from "../components/Listing/AddButton";
 import Edit from "../components/Edit/Edit";
 import { getUser, getAllusers, removeUser } from "../utils/api";
 
-const ITEMS_PER_PAGE = 2; // Adjust this as needed
+const ITEMS_PER_PAGE = 2;
 
 const ListingPage = () => {
   const [isCreateVisible, setCreateVisible] = useState(false);

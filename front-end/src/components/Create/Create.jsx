@@ -1,10 +1,9 @@
 import React,{useState,useEffect} from "react";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { createUser, getCities, getCountries, getLanguages, getStates } from "../../utils/api";
 import Spinner from "../../components/Fallback/Spinner"
 const Create = ({ onAddClick }) => {
 
-  const navigate = useNavigate()
   const [countries, setCountries] = useState([]);
   const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
@@ -65,7 +64,7 @@ const Create = ({ onAddClick }) => {
     };
 
     try {
-      const response = await createUser(formData);
+      await createUser(formData);
       onAddClick()
       event.target.reset();
     } catch (error) {
