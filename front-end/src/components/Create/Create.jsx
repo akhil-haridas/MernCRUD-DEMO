@@ -118,7 +118,6 @@ const Create = ({ onAddClick }) => {
     const password = event.target.value;
     const passwordStrength = zxcvbn(password);
     setPasswordStrength(passwordStrength);
-    const score = passwordStrength.score;
     setPassword(password);
   };
 
