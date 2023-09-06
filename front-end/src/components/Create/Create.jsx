@@ -99,6 +99,17 @@ const Create = ({ onAddClick }) => {
     }
   };
 
+    const handleConfirmPasswordChange = (event) => {
+      const confirmPassword = event.target.value;
+      if (confirmPassword === password) {
+        setConfirmPassword(confirmPassword);
+        setConfirmPasswordError("");
+      } else {
+        setConfirmPassword("");
+        setConfirmPasswordError("Passwords do not matching.");
+      }
+  };
+  
   const handleCityChange = (selectedOption) => {
     setSelectedCity(selectedOption);
   };
@@ -173,16 +184,7 @@ const Create = ({ onAddClick }) => {
     setSelectedLanguages(selectedOptions);
   };
 
-  const handleConfirmPasswordChange = (event) => {
-    const confirmPassword = event.target.value;
-    if (confirmPassword === password) {
-      setConfirmPassword(confirmPassword);
-      setConfirmPasswordError("");
-    } else {
-      setConfirmPassword("");
-      setConfirmPasswordError("Passwords do not matching.");
-    }
-  };
+
 
   return (
     <>
