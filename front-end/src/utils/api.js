@@ -52,7 +52,7 @@ export const getCountries = async () => {
   } catch (error) {
     Toast.fire({
       icon: "error",
-      text: "Error fetching image",
+      text: "Error fetching countries",
     });
     throw error;
   }
@@ -65,7 +65,7 @@ export const getLanguages = async () => {
   } catch (error) {
     Toast.fire({
       icon: "error",
-      text: "Error fetching image",
+      text: "Error fetching languages",
     });
     throw error;
   }
@@ -78,7 +78,7 @@ export const getStates = async (countryId) => {
   } catch (error) {
     Toast.fire({
       icon: "error",
-      text: "Error fetching image",
+      text: "Error fetching states",
     });
     throw error;
   }
@@ -91,7 +91,7 @@ export const getCities = async (stateId) => {
   } catch (error) {
     Toast.fire({
       icon: "error",
-      text: "Error fetching image",
+      text: "Error fetching cities",
     });
     throw error;
   }
@@ -149,7 +149,7 @@ export const getUser = async (userID) => {
   } catch (error) {
     Toast.fire({
       icon: "error",
-      text: "Error fetching image",
+      text: "Error fetching user",
     });
     throw error;
   }
