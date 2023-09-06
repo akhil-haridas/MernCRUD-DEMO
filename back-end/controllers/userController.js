@@ -140,7 +140,7 @@ exports.getAllUsers = async (req, res) => {
     const options = {
       page: parseInt(page),
       limit: parseInt(limit),
-      customLabels: { docs: "users", totalDocs: "totalImages" },
+      customLabels: { docs: "users", totalDocs: "totalUsers" },
       populate: [
         { path: "Country", select: "Name" }, 
         { path: "State", select: "Name" },
@@ -171,7 +171,6 @@ exports.getAllUsers = async (req, res) => {
       totalPages: result.totalPages,
       currentPage: result.page,
     };
-
     res.json(response);
   } catch (error) {
     console.error(error);
