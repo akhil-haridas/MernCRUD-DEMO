@@ -6,5 +6,6 @@ module.exports = {
   },
   server: {
     port: process.env.PORT || 3000,
-  }
+    origin: "https://mern-crud-demo.vercel.app",
+  },
 };
