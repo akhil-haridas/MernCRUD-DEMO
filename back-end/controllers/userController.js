@@ -203,6 +203,56 @@ exports.create = async (req, res) => {
     // await newUser.save();
 
 
+function generateSampleData(numDocuments) {
+  const sampleData = [];
+
+  for (let i = 6; i < numDocuments; i++) {
+    const fullName = `User ${i + 1}`;
+    const email = `user${i + 1}@example.com`;
+    const password = "$2b$10$SomeHashedPassword"; // Use a real hash if needed
+    const countryId = "64f7c0f3bc2a52abd079ada3"; // Replace with a real ObjectId
+    const stateId = "64f7c27823d357f7d85c7494"; // Replace with a real ObjectId
+    const cityId = "64f7ccc12502b6bcb84ee6ee"; // Replace with a real ObjectId
+    const languages = [
+      "64f7cf10a15986f641010962",
+      "64f7cf10a15986f641010961",
+    ];
+    const isActive = i % 2 === 0; 
+
+    const user = {
+      FullName: fullName,
+      Email: email,
+      Password: password,
+      Country: countryId ,
+      State: stateId,
+      City: cityId,
+      Languages: languages.map((langId) => langId ),
+      IsActive: isActive,
+    };
+
+    sampleData.push(user);
+  }
+
+  return sampleData;
+}
+
+// Generate 5 sample data documents
+const numDocuments = 50;
+const generatedData = generateSampleData(numDocuments);
+
+    
+    User.insertMany(generatedData)
+      .then((docs) => {
+        console.log(`Successfully inserted ${docs.length} documents.`);
+        // // Close the MongoDB connection
+        // mongoose.connection.close();
+      })
+      .catch((error) => {
+        console.error("Error inserting documents:", error);
+      });
+
+    
+console.log(JSON.stringify(generatedData, null, 2));
 
 
 
@@ -219,74 +269,74 @@ exports.create = async (req, res) => {
 
 
     
-     const citiesToSave = [
-       {
-         Name: "Tamil",
-       },
-       {
-         Name: "Malayalam",
-       },
-       {
-         Name: "Portuguese",
-       },
-       {
-         Name: "Spanish",
-       },
-       {
-         Name: "French",
-       },
-       {
-         Name: "German",
-       },
-       {
-         Name: "Chinese",
-       },
-       {
-         Name: "Arabic",
-       },
-       {
-         Name: "Bengali",
-       },
-       {
-         Name: "Hindi",
-       },
-       {
-         Name: "Korean",
-       },
-       {
-         Name: "Japanese",
-       },
-       {
-         Name: "Urdu",
-       },
-       {
-         Name: "Italian",
-       },
-       {
-         Name: "Russian",
-       },
-       {
-         Name: "Bengali",
-       },
-       {
-         Name: "Dutch",
-       },
-       {
-         Name: "Swedish",
-       },
-       {
-         Name: "Greek",
-       },
-     ];
+    //  const citiesToSave = [
+    //    {
+    //      Name: "Tamil",
+    //    },
+    //    {
+    //      Name: "Malayalam",
+    //    },
+    //    {
+    //      Name: "Portuguese",
+    //    },
+    //    {
+    //      Name: "Spanish",
+    //    },
+    //    {
+    //      Name: "French",
+    //    },
+    //    {
+    //      Name: "German",
+    //    },
+    //    {
+    //      Name: "Chinese",
+    //    },
+    //    {
+    //      Name: "Arabic",
+    //    },
+    //    {
+    //      Name: "Bengali",
+    //    },
+    //    {
+    //      Name: "Hindi",
+    //    },
+    //    {
+    //      Name: "Korean",
+    //    },
+    //    {
+    //      Name: "Japanese",
+    //    },
+    //    {
+    //      Name: "Urdu",
+    //    },
+    //    {
+    //      Name: "Italian",
+    //    },
+    //    {
+    //      Name: "Russian",
+    //    },
+    //    {
+    //      Name: "Bengali",
+    //    },
+    //    {
+    //      Name: "Dutch",
+    //    },
+    //    {
+    //      Name: "Swedish",
+    //    },
+    //    {
+    //      Name: "Greek",
+    //    },
+    //  ];
 
      // Use the insertMany() method to save multiple documents
-     Language.insertMany(citiesToSave)
-       .then((result) => {
-         console.log(`${result.length} cities saved successfully`);
-       })
-       .catch((error) => {
-         console.error(`Error saving cities: ${error}`);
-       });
+    //  Language.insertMany(citiesToSave)
+    //    .then((result) => {
+    //      console.log(`${result.length} cities saved successfully`);
+    //    })
+    //    .catch((error) => {
+    //      console.error(`Error saving cities: ${error}`);
+    //    });
 
     //  const newUser = new State({
     //    Name: "Vancouver",

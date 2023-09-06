@@ -11,7 +11,7 @@ import Spinner from "../components/Fallback/Spinner";
 
 import { getUser, getAllusers, removeUser } from "../utils/api";
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 10;
 
 const ListingPage = () => {
   const [isCreateVisible, setCreateVisible] = useState(false);
