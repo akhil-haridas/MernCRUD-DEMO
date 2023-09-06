@@ -8,10 +8,9 @@ const config = require("./config/serverConfig");
 const connectToDatabase = require("./utils/database");
 
 const corsOptions = {
-  origin: "https://mern-crud-demo.vercel.app",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
+  origin: [config.server.ORIGIN],
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 
 app.use(bodyParser.json());
