@@ -10,6 +10,6 @@ const userRoutes = () => {
       <Route path="/customers" exact element={<ListingPage />} />
     </Routes>
   );
-}
+};
 
-export default userRoutes
+export default userRoutes;

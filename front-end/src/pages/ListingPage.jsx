@@ -8,7 +8,6 @@ import Create from "../components/Create/Create";
 import AddButton from "../components/Listing/AddButton";
 import Edit from "../components/Edit/Edit";
 import Spinner from "../components/Fallback/Spinner";
-
 import { getUser, getAllusers, removeUser } from "../utils/api";
 
 const ITEMS_PER_PAGE = 10;
