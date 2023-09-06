@@ -1,7 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const API_BASE_URL = "http://localhost:4444/api/user";
+const API_BASE_URL = "https://mern-crud-backend-mvpm.onrender.com/api/user";
 
 const api = axios.create({
   baseURL: API_BASE_URL,

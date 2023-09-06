@@ -202,26 +202,105 @@ exports.create = async (req, res) => {
 
     // await newUser.save();
 
-     const newUser = new City({
-       Name: "Red Deer",
-       State: "64f77cc7c93eb16300c38d7c",
-     });
 
-     await newUser.save();
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+    
+     const citiesToSave = [
+       {
+         Name: "Tamil",
+       },
+       {
+         Name: "Malayalam",
+       },
+       {
+         Name: "Portuguese",
+       },
+       {
+         Name: "Spanish",
+       },
+       {
+         Name: "French",
+       },
+       {
+         Name: "German",
+       },
+       {
+         Name: "Chinese",
+       },
+       {
+         Name: "Arabic",
+       },
+       {
+         Name: "Bengali",
+       },
+       {
+         Name: "Hindi",
+       },
+       {
+         Name: "Korean",
+       },
+       {
+         Name: "Japanese",
+       },
+       {
+         Name: "Urdu",
+       },
+       {
+         Name: "Italian",
+       },
+       {
+         Name: "Russian",
+       },
+       {
+         Name: "Bengali",
+       },
+       {
+         Name: "Dutch",
+       },
+       {
+         Name: "Swedish",
+       },
+       {
+         Name: "Greek",
+       },
+     ];
+
+     // Use the insertMany() method to save multiple documents
+     Language.insertMany(citiesToSave)
+       .then((result) => {
+         console.log(`${result.length} cities saved successfully`);
+       })
+       .catch((error) => {
+         console.error(`Error saving cities: ${error}`);
+       });
 
     //  const newUser = new State({
-    //    Name: "Northern Ireland",
-    //    Country: "64f77bb0126e1c42e1d37175",
+    //    Name: "Vancouver",
+    //    Country: "64f7c21ba3b2e57d2f1370cf",
     //  });
 
     //  await newUser.save();
 
     //  const newUser = new Country({
-    //    Name: "United Kingdom(UK)",
+    //    Name: "Australia",
     //  });
 
     //  await newUser.save();
 
-    res.status(200).json(newUser);
+    // res.status(200).json(newUser);
   } catch (error) {}
 };
