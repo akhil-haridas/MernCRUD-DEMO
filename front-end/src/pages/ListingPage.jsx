@@ -31,9 +31,9 @@ const ListingPage = () => {
     setIsLoading(true);
     try {
       const response = await getAllusers(page, ITEMS_PER_PAGE);
+      setDocumentCount(response.totalUsers);
       setUsers(response.users);
       setTotalPages(response.totalPages);
-      setDocumentCount(response.totalUsers);
     } catch (error) {
       console.error(error);
     } finally {
