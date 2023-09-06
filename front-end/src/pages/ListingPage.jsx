@@ -21,6 +21,8 @@ const ListingPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [documentCount, setDocumentCount] = useState(0);
+
   useEffect(() => {
     fetchUsers(currentPage);
   }, [isCreateVisible, currentPage, isEditVisible]);
@@ -31,6 +33,7 @@ const ListingPage = () => {
       const response = await getAllusers(page, ITEMS_PER_PAGE);
       setUsers(response.users);
       setTotalPages(response.totalPages);
+      setDocumentCount(response.totalUsers);
     } catch (error) {
       console.error(error);
     } finally {
@@ -78,7 +81,7 @@ const ListingPage = () => {
         <Edit onEditClick={toggleEditComponent} userData={userData} />
       )}
       <Head />
-      <Breadcrumb current={"CUSTOMER LIST"} />
+      <Breadcrumb current={`CUSTOMER LIST(${documentCount})`} />
       <div className="latest-news mb-150">
         <div className="container">
           <div className="row">
@@ -87,6 +90,7 @@ const ListingPage = () => {
               onEditClick={toggleEditComponent}
               onRemoveClick={onRemoveClick}
               users={users}
+              currentPage={currentPage}
             />
           </div>
           <Pagination

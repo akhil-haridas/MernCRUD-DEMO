@@ -167,7 +167,7 @@ exports.getAllUsers = async (req, res) => {
 
     const response = {
       users: formattedUsers,
-      totalUsers: result.totalImages,
+      totalUsers: result.totalUsers,
       totalPages: result.totalPages,
       currentPage: result.page,
     };

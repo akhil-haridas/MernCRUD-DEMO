@@ -1,7 +1,13 @@
-import React from 'react'
+import React, { useState, useEffect } from "react";
 
+const Table = ({ onEditClick, onRemoveClick, users, currentPage }) => {
+  const [rowCount, setRowCount] = useState(0);
 
-const Table = ({ onEditClick, onRemoveClick, users }) => {
+    useEffect(() => {
+      const itemsPerPage = 10;
+      const initialRowCount = (currentPage - 1) * itemsPerPage;
+      setRowCount(initialRowCount);
+    }, [currentPage]); 
 
   function formatTimestamp(timestamp) {
     const options = { year: "2-digit", month: "long", day: "numeric" };
@@ -36,8 +42,8 @@ const Table = ({ onEditClick, onRemoveClick, users }) => {
           </thead>
           <tbody>
             {users.map((user, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
+              <tr key={user._id}>
+                <td>{rowCount + index + 1}</td>
                 <td>
                   <div className="d-flex align-items-center">
                     <div className="ms-3">
@@ -83,4 +89,4 @@ const Table = ({ onEditClick, onRemoveClick, users }) => {
   );
 };
 
-export default Table
+export default Table;
