@@ -134,8 +134,7 @@ const Create = ({ onAddClick }) => {
       selectedCity &&
       selectedLanguages.length > 0 &&
       emailError === "" &&
-      confirmPasswordError === "" &&
-      passwordStrength.score >= 3 
+      confirmPasswordError === "" 
     );
   };
   const handleSubmit = async (event) => {
