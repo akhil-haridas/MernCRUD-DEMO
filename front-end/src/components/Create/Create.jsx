@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import zxcvbn from "zxcvbn";
-
+import Swal from "sweetalert2";
 import {
   createUser,
   getCountries,
@@ -30,6 +30,18 @@ const Create = ({ onAddClick }) => {
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   useEffect(() => {
     fetchCountries();
@@ -115,9 +127,26 @@ const Create = ({ onAddClick }) => {
         return "Very Weak";
     }
   };
-
+  const isFormValid = () => {
+    return (
+      selectedCountry &&
+      selectedState &&
+      selectedCity &&
+      selectedLanguages.length > 0 &&
+      emailError === "" &&
+      confirmPasswordError === "" &&
+      passwordStrength.score >= 3 
+    );
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!isFormValid()) {
+         Toast.fire({
+           icon: "warning",
+           text: "Please fill input fields.",
+         });
+      return
+    }
     setIsLoading(true);
     const formData = {
       FullName: event.target.fullname.value,
@@ -355,6 +384,7 @@ const Create = ({ onAddClick }) => {
                                   background: "green",
                                 }}
                                 type="submit"
+                                
                               >
                                 Create
                               </button>
