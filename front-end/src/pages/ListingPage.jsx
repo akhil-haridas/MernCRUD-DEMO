@@ -79,7 +79,7 @@ const ListingPage = () => {
       {isEditVisible && (
         <Edit onEditClick={toggleEditComponent} userData={userData} />
       )}
-      <Head />
+      <Head active={"customers"} />
       <Breadcrumb current={`CUSTOMER LIST(${documentCount})`} />
       <div className="latest-news mb-150">
         <div className="container">
